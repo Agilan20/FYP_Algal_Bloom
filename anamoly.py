@@ -67,25 +67,4 @@ def anamoly_calculation(ndvi, ndci, b8ab4, b3b2, input, output_path, combined_ou
     plt.savefig(combined_output_path_url, dpi=300, bbox_inches='tight')
     plt.show()
 
-origin_path = r'C:\\Users\\Agilan B\\fyp\\Algal-bloom\\template\\'
-dataset_path = r'datasets\\'
-siac_output_path = r'output\\siac_output'
-ndvi_output_path = r'output\\ndvi_output'
-ndci_output_path = r'output\\ndci_output'
-b8ab4_output_path = r'output\\b8ab4_output'
-b3b2_output_path = r'output\\b3b2_output'
-siac_data = origin_path+siac_output_path+'\\'
-ndvi_output_data = origin_path+ndvi_output_path+'\\ndvi'
-ndci_output_data = origin_path+ndci_output_path+'\\ndci'
-b8ab4_output_data = origin_path+b8ab4_output_path+'\\b8ab4'
-b3b2_output_data = origin_path+b3b2_output_path+'\\b3b2'
 
-anamoly_calculation(
-    ndvi_output_data+'_output_image_',
-    ndci_output_data+'_output_image_',
-    b8ab4_output_data+'_output_image_',
-    b3b2_output_data+'_output_image_',
-    'Sentinel2_Composite_2016-08-16.tif',
-    'C:\\Users\\Agilan B\\fyp\\Algal-bloom\\template\\output\\anamoly_output\\',
-    'C:\\Users\\Agilan B\\fyp\\Algal-bloom\\template\\output\\anamoly_output\\combined_anamoly\\'
-)
