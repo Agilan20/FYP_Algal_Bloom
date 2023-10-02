@@ -6,35 +6,31 @@ from rasterio.enums import Resampling
 from rasterio.plot import show
 from matplotlib import pyplot as plt 
 
-# Function to perform atmospheric correction (simplified)
+# Function to perform atmospheric correction
 def atmospheric_correction(image_data):
-    # Your atmospheric correction algorithm here (e.g., dark object subtraction)
-    # This example assumes a simple scaling factor; you should replace it with a proper correction method
     scale_factor = 1.2
     
     corrected_data = image_data * scale_factor
     
     return corrected_data
 
-
 def siac_calculation(path, input, datasets, outputDir):
-    input_image = path+datasets+input
-    output_dir = path+outputDir
-    output_image = os.path.join(output_dir, 'siac_output_image_'+input)
-    os.makedirs(output_dir, exist_ok=True)
+    try:
+        input_image = os.path.join(path, datasets, input)
+        output_dir = os.path.join(path, outputDir)
+        output_image = os.path.join(output_dir, 'siac_output_image_' + input)
+        os.makedirs(output_dir, exist_ok=True)
 
-    # Open the input image
-    with rasterio.open(input_image) as src:
-        profile = src.profile
-        image_data = src.read()
+        with rasterio.open(input_image) as src:
+            profile = src.profile
+            image_data = src.read()
+            corrected_data = np.zeros_like(image_data)
+            for band_idx in range(src.count):
+                corrected_data[band_idx] = atmospheric_correction(image_data[band_idx])
 
-        # Perform atmospheric correction on each band
-        corrected_data = np.zeros_like(image_data)
-        for band_idx in range(src.count):
-            corrected_data[band_idx] = atmospheric_correction(image_data[band_idx])
+        with rasterio.open(output_image, 'w', **profile) as dst:
+            dst.write(corrected_data)
 
-    # Create a new raster file with the corrected data
-    with rasterio.open(output_image, 'w', **profile) as dst:
-        dst.write(corrected_data)
-
-    print("Atmospheric correction completed. Output image saved as", output_image)
+        print("Atmospheric correction completed. Output image saved as", output_image)
+    except Exception as e:
+        print(f"An error occurred: {e}")
